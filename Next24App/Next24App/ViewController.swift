@@ -6,14 +6,16 @@
 //
 
 import UIKit
+import Foundation
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+    /* tableView showing tasks for today */
     @IBOutlet weak var todayTableView: UITableView!
     
+    /* tableView showing tasks for tomorrow */
     @IBOutlet weak var tomorrowTableView: UITableView!
     
-    
+    /* Cal to keep track of when days switch*/
     let calendar = Calendar.current
     let today = Date()
     var storedDate = Date(timeIntervalSince1970: 0)
@@ -26,8 +28,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-
+        
         if (storedDate == Date(timeIntervalSince1970: 0)) {
             storedDate = today
         }
@@ -49,6 +50,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tomorrowTableView.delegate = self
         tomorrowTableView.dataSource = self
         
+        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+        tap.numberOfTapsRequired = 2
+        todayTableView.addGestureRecognizer(tap)
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,6 +61,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    @objc func doubleTapped(_ tableView: UITableView) {
+        // do something here
+        
+        todayTasks.append(Task(title: "tester", isCompleted: false))
+        todayTableView.reloadData()
+        print("test")
+        
+        
+        
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -74,7 +89,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         if tableView == todayTableView {
             
-            let cell: UITableViewCell = (self.todayTableView.dequeueReusableCell(withIdentifier: "today") as! UITableViewCell?)!
+            let cell: UITableViewCell = (self.todayTableView.dequeueReusableCell(withIdentifier: "today") )!
             
             cell.textLabel?.text = self.todayTasks[indexPath.row].title
             
@@ -83,7 +98,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         else if tableView == tomorrowTableView {
             
-            let cell: UITableViewCell = (self.todayTableView.dequeueReusableCell(withIdentifier: "today") as! UITableViewCell?)!
+            let cell: UITableViewCell = (self.todayTableView.dequeueReusableCell(withIdentifier: "today") )!
             
             cell.textLabel?.text = self.todayTasks[indexPath.row].title
             
@@ -105,9 +120,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
            
             // action one
             
-            let editAction = UITableViewRowAction(style: .default, title: "Move", handler: { (action, indexPath) in
+            let editAction = UITableViewRowAction(style: .default, title: "Push", handler: { (action, indexPath) in
                 
-                var task = self.todayTasks[indexPath.row]
+                let task = self.todayTasks[indexPath.row]
                 
                 self.todayTasks.remove(at: indexPath.row)
                 

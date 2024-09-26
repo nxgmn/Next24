@@ -36,7 +36,6 @@ class TaskCell: UITableViewCell, UITextFieldDelegate {
         update(with: task)
         
         
-        
     }
     
     private func update(with task: Task) {
